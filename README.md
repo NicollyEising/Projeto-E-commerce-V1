@@ -43,7 +43,3 @@ Este é um projeto de e-commerce de sapatos que permite aos usuários realizar l
   - application.properties (configurações)  
 - **src/main/webapp**  
   - HTML, CSS, JS (frontend)  
-
-## Licença
-
-Licenciado sob a Licença MIT. Consulte o arquivo LICENSE para mais detalhes.
