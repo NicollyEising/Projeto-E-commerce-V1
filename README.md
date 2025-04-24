@@ -31,15 +31,3 @@ Este é um projeto de e-commerce de sapatos que permite aos usuários realizar l
 
 4. Acessar no navegador  
    `http://localhost:8080`  
-
-## Estrutura do Projeto
-
-- **src/main/java**  
-  - controller (endpoints REST)  
-  - model (entidades)  
-  - repository (acesso a dados)  
-  - service (lógica de negócio)  
-- **src/main/resources**  
-  - application.properties (configurações)  
-- **src/main/webapp**  
-  - HTML, CSS, JS (frontend)  
