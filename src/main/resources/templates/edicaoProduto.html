@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perfil</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+      integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+      integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script
+      src="https://kit.fontawesome.com/7805d04e4e.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+      integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+      integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script
+      src="https://kit.fontawesome.com/7805d04e4e.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+    <style>
+      .search-input {
+        width: 100vh; /* Defina a largura desejada */
+      }
+      img {
+        width: 20vh;
+        margin: auto;
+        margin-top: 2vh;
+      }
+      .row {
+        margin-top: 5vh;
+      }
+
+      .search-input {
+        width: 100vh; /* Defina a largura desejada */
+      }
+      a {
+        text-decoration: none;
+        color: black;
+      }
+
+      .list-group {
+        background-color: #f9f9f9;
+        border-radius: 1rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        color: #000;
+      }
+
+      .list-group-item {
+        background-color: #f9f9f9;
+        border: none; /* Remove a borda */
+      }
+      button {
+        margin-top: 1vh;
+      }
+
+      .nav-item:hover {
+        background-color: gray;
+      }
+
+      .search-input {
+        border-radius: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-dark bg-dark">
+      <div class="container justify-content-center">
+        <form class="d-flex" onsubmit="pesquisarPorNome(event);">
+          <input class="form-control me-2 search-input mt-2" id="inputNome" type="search" placeholder="Buscar"
+            aria-label="Search">
+          <button class="btn text-light" type="submit"><i class="fa-solid fa-magnifying-glass"
+              style="font-size: 1.3em;"></i></button>
+        </form>
+      </div>
+    </nav>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <button
+          onclick="pesquisarPorNome()"
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mx-auto me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" th:href="@{/index}"
+                >Inicio</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" th:href="@{/listaDesejos}"
+                >Favoritos</a
+              >
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle active"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Genero
+              </a>
+              <ul
+                class="dropdown-menu text-light bg-dark"
+                aria-labelledby="navbarDropdown"
+              >
+                <li>
+                  <a
+                    class="dropdown-item text-light"
+                    th:href="@{/index}"
+                    name="genero"
+                    value="F"
+                    onclick="filtrarGenero('F')"
+                    >Feminino</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item text-light"
+                    th:href="@{/index}"
+                    name="genero"
+                    value="F"
+                    onclick="filtrarGenero('M')"
+                    >Masculino</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle active"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Marcas
+              </a>
+              <ul
+                class="dropdown-menu text-light bg-dark"
+                aria-labelledby="navbarDropdown"
+              >
+                <li>
+                  <a
+                    class="dropdown-item text-light"
+                    th:href="@{/index}"
+                    name="marca"
+                    value="Nike"
+                    onclick="filtrarMarca('Nike')"
+                    >Nike</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item text-light"
+                    th:href="@{/index}"
+                    name="marca"
+                    value="Adidas"
+                    onclick="filtrarMarca('Adidas')"
+                    >Adidas</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item text-light"
+                    th:href="@{/index}"
+                    hname="marca"
+                    value="Puma"
+                    onclick="filtrarMarca('Puma')"
+                    >Puma</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" th:href="@{/carrinhoDeCompras} "
+                >Carrinho</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" th:href="@{/login} ">Entrar</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="row justify-content-center mt-5">
+        <!--card editar produto-->
+        <div class="col-sm-7 row">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title">Editar Produto</h5>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <form
+                class="row g-3 needs-validation pb-5"
+                id="editForm"
+                novalidate
+              >
+                <div class="col-md-4 position-relative">
+                  <label for="validationTooltip01" class="form-label"
+                    >Nome</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    name="name"
+                    value=""
+                    required
+                  />
+                  <div class="valid-tooltip">OK!</div>
+                </div>
+                <div class="col-md-4 position-relative">
+                  <label for="validationTooltip02" class="form-label"
+                    >Preco</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="price"
+                    name="price"
+                    value=""
+                    required
+                  />
+                  <div class="valid-tooltip">OK!</div>
+                </div>
+                <div class="col-md-4 position-relative">
+                  <label for="validationTooltip03" class="form-label"
+                    >Marca</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="brand"
+                    name="brand"
+                    required
+                  />
+                  <div class="invalid-tooltip">
+                    Por favor, forneça uma senha válida.
+                  </div>
+                </div>
+                <div class="col-md-6 position-relative">
+                  <label for="validationTooltip03" class="form-label"
+                    >Description</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="description"
+                    name="description"
+                    required
+                  />
+                  <div class="invalid-tooltip">
+                    Por favor, forneça um endereço válido.
+                  </div>
+                </div>
+                <div class="col-md-3 position-relative">
+                  <label for="validationTooltip04" class="form-label"
+                    >Genero</label
+                  >
+                  <select
+                    class="form-select"
+                    id="genero"
+                    name="genero"
+                    required
+                  >
+                    <option selected value="F">Feminino</option>
+                    <option value="F">Masculino</option>
+                  </select>
+
+                  <div class="invalid-tooltip">
+                    Por favor, forneça um genero válido.
+                  </div>
+                </div>
+                <div class="col-md-3 position-relative">
+                  <label for="validationTooltip05" class="form-label"
+                    >Estoque</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="stock"
+                    name="stock"
+                    required
+                  />
+                  <div class="invalid-tooltip">
+                    Por favor, forneça um número válido.
+                  </div>
+                </div>
+                <div class="col-md">
+                  <label for="validationTooltip03" class="form-label"
+                    >Imagem</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="image"
+                    name="image"
+                    required
+                  />
+                </div>
+                <div class="container">
+                  <div class="d-grid gap-2 d-md-flex justify-content-end mt-3">
+                    <button type="submit" class="btn btn-dark">Salvar</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get("id");
+
+        // Buscar os dados do produto
+        axios
+          .get(`http://localhost:8080/produtos/${productId}`)
+          .then((response) => {
+            const produto = response.data;
+            document.getElementById("name").value = produto.name;
+            document.getElementById("price").value = produto.price;
+            document.getElementById("description").value = produto.description;
+            document.getElementById("genero").value = produto.genre;
+            document.getElementById("brand").value = produto.brand;
+            document.getElementById("stock").value = produto.stock;
+            document.getElementById("image").value = produto.imageUrl;
+          })
+          .catch((error) => {
+            console.error("Erro ao buscar produto:", error);
+          });
+
+        // Enviar os dados atualizados
+        document
+          .getElementById("editForm")
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+            const updatedProduct = {
+              name: document.getElementById("name").value,
+              price: document.getElementById("price").value,
+              description: document.getElementById("description").value,
+              genre: document.getElementById("genero").value,
+              brand: document.getElementById("brand").value,
+              imageUrl: document.getElementById("image").value,
+            };
+
+            axios
+              .put(
+                `http://localhost:8080/produtos/editar/${productId}`,
+                updatedProduct
+              )
+              .then((response) => {
+                alert("Produto atualizado com sucesso!");
+                window.location.href = "/gerenciamentoProduto";
+              })
+              .catch((error) => {
+                console.error("Erro ao atualizar produto:", error);
+              });
+          });
+      });
+
+
+      function pesquisarPorNome(event) {
+        event.preventDefault();
+        var nome = document.getElementById('inputNome').value;
+  
+        axios.get('http://localhost:8080/index', {
+          params: {
+            Name: nome
+          }
+        })
+          .then(response => {
+            window.location.href = "/index?Name=" + encodeURIComponent(nome);
+          })
+          .catch(error => {
+            console.error('Erro na requisição:', error);
+          });
+      }
+  
+    </script>
+  </body>
+</html>

@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista de Produtos</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+      integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+      integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script
+      src="https://kit.fontawesome.com/7805d04e4e.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <style>
+      .search-input {
+        width: 100vh; /* Defina a largura desejada */
+      }
+      a {
+        text-decoration: none;
+        color: black;
+      }
+
+      button {
+        margin-top: 1vh;
+      }
+
+      .nav-item:hover {
+        background-color: gray;
+      }
+
+      .search-input {
+        border-radius: 40px;
+      }
+
+      #icon {
+        transition: transform 0.3s ease-out;
+      }
+
+      #icon.clicked {
+        transform: scale(
+          1.5
+        ); /* Ajuste o valor conforme necessário para o tamanho desejado */
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-dark bg-dark">
+      <div class="container justify-content-center">
+        <form class="d-flex" onsubmit="pesquisarPorNome(event);">
+          <input class="form-control me-2 search-input mt-2" id="inputNome" type="search" placeholder="Buscar" aria-label="Search">
+          <button class="btn text-light" type="submit"><i class="fa-solid fa-magnifying-glass" style="font-size: 1.3em;"></i></button>
+        </form>
+        
+      </div>
+    </nav>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <button
+          onclick="pesquisarPorNome(event)"
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mx-auto me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" th:href="@{/index}"
+                >Inicio</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" th:href="@{/listaDesejos}"
+                >Favoritos</a
+              >
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle active"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Genero
+              </a>
+              <ul
+                class="dropdown-menu text-light bg-dark"
+                aria-labelledby="navbarDropdown"
+              >
+                <li>
+                  <a
+                    class="dropdown-item text-light"
+                    href="#"
+                    name="genero"
+                    value="F"
+                    onclick="filtrarGenero('F')"
+                    >Feminino</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item text-light"
+                    href="#"
+                    name="genero"
+                    value="F"
+                    onclick="filtrarGenero('M')"
+                    >Masculino</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle active"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Marcas
+              </a>
+              <ul
+                class="dropdown-menu text-light bg-dark"
+                aria-labelledby="navbarDropdown"
+              >
+                <li>
+                  <a
+                    class="dropdown-item text-light"
+                    href="#"
+                    name="marca"
+                    value="Nike"
+                    onclick="filtrarMarca('Nike')"
+                    >Nike</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item text-light"
+                    href="#"
+                    name="marca"
+                    value="Adidas"
+                    onclick="filtrarMarca('Adidas')"
+                    >Adidas</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item text-light"
+                    href="#"
+                    hname="marca"
+                    value="Puma"
+                    onclick="filtrarMarca('Puma')"
+                    >Puma</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" th:href="@{/carrinhoDeCompras} "
+                >Carrinho</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" th:href="@{/login} ">Entrar</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row justify-content-center mt-5">
+        <div class="col-sm-2 m-2">
+          <ul class="list-group">
+            <li class="list-group-item">
+              <label>Marca</label><br />
+              <input
+                class="form-check-input m-2 me-1"
+                type="radio"
+                name="marca"
+                value="Puma"
+                id="marcaPuma"
+                aria-label="..."
+              />
+              Puma<br />
+              <input
+                class="form-check-input m-2 me-1"
+                type="radio"
+                name="marca"
+                value="Adidas"
+                id="marcaAdidas"
+                aria-label="..."
+              />
+              Adidas<br />
+              <input
+                class="form-check-input m-2 me-1"
+                type="radio"
+                name="marca"
+                value="Nike"
+                id="marcaNike"
+                aria-label="..."
+              />
+              Nike<br />
+            </li>
+            <li class="list-group-item">
+              <label>Preco</label><br />
+              <input
+                class="form-check-input m-2 me-1"
+                type="radio"
+                name="preco"
+                value="0-50"
+                aria-label="..."
+              />
+              Até R$50<br />
+              <input
+                class="form-check-input m-2 me-1"
+                type="radio"
+                name="preco"
+                value="50-100"
+                aria-label="..."
+              />
+              R$50 - R$100<br />
+              <input
+                class="form-check-input m-2 me-1"
+                type="radio"
+                name="preco"
+                value="100-200"
+                aria-label="..."
+              />
+              R$100 - R$200<br />
+              <input
+                class="form-check-input m-2 me-1"
+                type="radio"
+                name="preco"
+                value="200+"
+                aria-label="..."
+              />
+              Acima de R$200<br />
+            </li>
+            <li class="list-group-item">
+              <label>Genero</label><br />
+              <input
+                class="form-check-input m-2 me-1"
+                type="radio"
+                name="genero"
+                value="F"
+                aria-label="..."
+              />
+              Feminino<br />
+              <input
+                class="form-check-input m-2 me-1"
+                type="radio"
+                name="genero"
+                value="M"
+                aria-label="..."
+              />
+              Masculino<br />
+
+              <div>
+                <button
+                  class="btn btn-dark botaoFiltra m-2 me-md-2"
+                  onclick="filtrar()"
+                  type="button"
+                >
+                  Filtrar
+                </button>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-8 row" id="row"></div>
+      </div>
+    </div>
+
+    <!--antigo-->
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      let userId;
+      window.onload = function () {
+        const params = new URLSearchParams(window.location.search);
+        console.log(params.toString()); // Adicionado para verificar todos os parâmetros da URL
+        const nome = params.get("Name");
+        console.log("Nome:", nome);
+        let productId;
+        
+        if (nome) {
+          fetch("http://localhost:8080/users/profile")
+            .then((response) => response.json()) // Converte a resposta para JSON
+            .then((data) => {
+              userId = data;
+            })
+            .catch((error) => {});
+
+          if (!userId) {
+          } else {
+          }
+
+          axios
+            .get("http://localhost:8080/produtos/produtosPorNome", {
+              params: { Name: nome },
+            })
+            .then((response) => {
+              const produtosEncontrados = response.data;
+              const cardContainer = document.getElementById("row");
+              cardContainer.innerHTML = ""; // Limpa o contêiner antes de adicionar novos cards
+
+              produtosEncontrados.forEach((produto) => {
+                productId = produto.id;
+                const card = `
+                  <div class="card m-2" style="width: 18rem;">
+                                  
+                  <a href="#" onclick="addToWishlist(${userId}, ${productId})" class="ms-auto">
+                  <i class="fa-solid fa-heart m-3 ms-auto" id="icon" style="font-size: 1.5rem;"></i>
+                  </a>
+                    <img src="${produto.imageUrl}" class="card-img-top" alt="">
+                    <div class="card-body">
+                      <h5 class="card-title">${produto.name}</h5>
+                      <a href="#" onclick="detalhesProduto('${produto.price}')"></a>
+                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                      <a href="#" onclick="window.location.href='/login'" class="btn btn-dark">Adicionar ao Carrinho</a>
+                    </div>
+                  </div>`;
+                cardContainer.innerHTML += card;
+              });
+            })
+            .catch((error) => {
+              console.error("Erro ao buscar produtos por nome:", error);
+            });
+        } else {
+          const minPriceElement = document.querySelector(
+            'input[name="preco"]:checked'
+          );
+          const marcaElements = document.querySelectorAll(
+            'input[name="marca"]:checked'
+          );
+          const genreElements = document.querySelectorAll(
+            'input[name="genero"]:checked'
+          );
+
+          let minPrice = null;
+          let maxPrice = null;
+          let marcasSelecionadas = [];
+          let genresSelecionados = [];
+
+          if (genreElements.length > 0) {
+            genresSelecionados = Array.from(genreElements).map(
+              (el) => el.value
+            );
+          }
+
+          if (minPriceElement) {
+            const priceRange = minPriceElement.value.split("-");
+            minPrice = parseFloat(priceRange[0]);
+            maxPrice = priceRange[1] ? parseFloat(priceRange[1]) : null;
+          }
+
+          if (marcaElements.length > 0) {
+            marcaElements.forEach((el) => {
+              marcasSelecionadas.push(el.value);
+            });
+          }
+
+          const params = {
+            min: minPrice,
+            max: maxPrice,
+            marcas:
+              marcasSelecionadas.length > 0
+                ? marcasSelecionadas.join(",")
+                : null,
+            genre: genresSelecionados.length > 0 ? genresSelecionados[0] : null,
+          };
+
+          fetch("http://localhost:8080/users/profile")
+            .then((response) => response.json()) // Converte a resposta para JSON
+            .then((data) => {
+              userId = data;
+            })
+            .catch((error) => {});
+
+          if (!userId) {
+          } else {
+          }
+
+          axios
+            .get("http://localhost:8080/produtos/api/todosProdutos", {
+              params: params,
+            })
+            .then((response) => {
+              const produtosEncontrados = response.data;
+              const cardContainer = document.getElementById("row");
+              cardContainer.innerHTML = ""; // Limpa o contêiner antes de adicionar novos cards
+
+              produtosEncontrados.forEach((produto) => {
+                productId = produto.id;
+                const card = `
+                <div class="card m-2" style="width: 18rem;">
+                                    <a href="#" onclick="addToWishlist(${userId}, ${productId})" class="ms-auto">
+                  <i class="fa-solid fa-heart m-3 ms-auto" id="icon" style="font-size: 1.5rem;"></i>
+                  </a>
+                  <a href="#" onclick="detalhesProduto('${produto.id}')">
+                  <img src="${produto.imageUrl}" class="card-img-top" alt="">
+                  <div class="card-body">
+                    
+                    <h5 class="card-title">${produto.name}</h5>
+                    </a>
+                    <p class="valorproduto">R$ ${produto.price}</p>
+                    <p class="card-text">${produto.description}</p>
+<button class="btn btn-dark" id="addToCartBtn" onclick="addToCart(${userId}, ${productId})">Adicionar ao Carrinho</button>                  </div>
+                </div>`;
+                cardContainer.innerHTML += card;
+              });
+            })
+            .catch((error) => {
+              console.error("Erro ao buscar produtos por nome:", error);
+            });
+        }
+      };
+
+      function addToWishlist(userId, productId) {
+        axios
+          .post(
+            `http://localhost:8080/users/${userId}/wishlist/add/${productId}`
+          )
+          .then((response) => {
+            console.log(
+              "Produto adicionado à lista de desejos:",
+              response.data
+            );
+            window.location.href = "/listaDesejos";
+            // Aqui você pode atualizar a interface, se necessário
+          })
+          .catch((error) => {
+            console.error(
+              "Erro ao adicionar produto à lista de desejos:",
+              error
+            );
+
+            // Trate o erro conforme necessário (exibir mensagem de erro, etc.)
+          });
+      }
+
+      function pesquisarPorNome(event) {
+        event.preventDefault(); // Previne o comportamento padrão do formulário
+      
+        const nome = document.getElementById("inputNome").value.trim();
+      
+        const params = {
+          Name: nome,
+        };
+      
+        // Pega o userId
+        fetch("http://localhost:8080/users/profile")
+          .then(response => response.json())
+          .then(data => {
+            userId = data;
+            excecucaoNome(nome, userId);
+          })
+          .catch(error => {
+            console.error("Erro ao obter perfil do usuário:", error);
+          });
+      }
+      function excecucaoNome() {
+        const nome = document.getElementById("inputNome").value.trim();
+
+        const params = {
+          Name: nome,
+        };
+        axios
+          .get("http://localhost:8080/produtos/produtosPorNome", {
+            params: params,
+          })
+          .then((response) => {
+            const produtosEncontrados = response.data;
+            const cardContainer = document.getElementById("row");
+            cardContainer.innerHTML = ""; // Limpa o contêiner antes de adicionar novos cards
+
+            produtosEncontrados.forEach((produto) => {
+              productId = produto.id;
+              const card = `
+              <div class="card m-2" style="width: 18rem;">
+                <a href="#" onclick="addToWishlist(${userId}, ${productId})" class="ms-auto">
+                <i class="fa-solid fa-heart m-3 ms-auto" id="icon" style="font-size: 1.5rem;"></i>
+                </a>
+                <a href="#" onclick="detalhesProduto('${produto.id}')">
+                <img src="${produto.imageUrl}" class="card-img-top" alt="">
+                <div class="card-body">
+                  
+                  <h5 class="card-title">${produto.name}</h5>
+                  </a>
+                  <p class="valorproduto">R$ ${produto.price}</p>
+                  <p class="card-text">${produto.description}</p>
+<button class="btn btn-dark" id="addToCartBtn" onclick="addToCart(${userId}, ${productId})">Adicionar ao Carrinho</button>                </div>
+              </div>`;
+              cardContainer.innerHTML += card;
+            });
+          })
+          .catch((error) => {
+            console.error("Erro ao buscar produtos por nome:", error);
+          });
+      }
+
+      function filtrar() {
+        const minPriceElement = document.querySelector(
+          'input[name="preco"]:checked'
+        );
+        const marcaElements = document.querySelectorAll(
+          'input[name="marca"]:checked'
+        );
+        const genreElements = document.querySelectorAll(
+          'input[name="genero"]:checked'
+        );
+
+        let minPrice = null;
+        let maxPrice = null;
+        let marcasSelecionadas = [];
+        let genresSelecionados = [];
+
+        if (genreElements.length > 0) {
+          genresSelecionados = Array.from(genreElements).map((el) => el.value);
+        }
+
+        if (minPriceElement) {
+          const priceRange = minPriceElement.value.split("-");
+          minPrice = parseFloat(priceRange[0]);
+          maxPrice = priceRange[1] ? parseFloat(priceRange[1]) : null;
+        }
+
+        if (marcaElements.length > 0) {
+          marcaElements.forEach((el) => {
+            marcasSelecionadas.push(el.value);
+          });
+        }
+
+        const params = {
+          min: minPrice,
+          max: maxPrice,
+          marcas:
+            marcasSelecionadas.length > 0 ? marcasSelecionadas.join(",") : null,
+          genre: genresSelecionados.length > 0 ? genresSelecionados[0] : null,
+        };
+
+        fetch("http://localhost:8080/users/profile")
+          .then((response) => response.json()) // Converte a resposta para JSON
+          .then((data) => {
+            userId = data;
+            excecucaoFuncao();
+          })
+          .catch((error) => {})
+          .finally(() => {});
+
+        axios
+          .get("http://localhost:8080/produtos/api/produtosPorPreco", {
+            params: params,
+          })
+          .then((response) => {
+            const produtosEncontrados = response.data;
+            const cardContainer = document.getElementById("row");
+            cardContainer.innerHTML = ""; // Limpa o contêiner antes de adicionar novos cards
+
+            produtosEncontrados.forEach((produto) => {
+              productId = produto.id;
+              const card = `
+              <div class="card m-2" style="width: 18rem;">
+                                  <a href="#" onclick="addToWishlist(${userId}, ${produto.id});" class="ms-auto">
+                  <i class="fa-solid fa-heart m-3 ms-auto" id="icon" style="font-size: 1.5rem;"></i>
+                  </a>
+                <a href="#" onclick="detalhesProduto('${produto.id}')">
+                <img src="${produto.imageUrl}" class="card-img-top" alt="">
+                <div class="card-body">
+                  
+                  <h5 class="card-title">${produto.name}</h5>
+                  </a>
+                  <p class="valorproduto">R$ ${produto.price}</p>
+                  <p class="card-text">${produto.description}</p>
+<button class="btn btn-dark" id="addToCartBtn" onclick="addToCart(${userId}, ${productId})">Adicionar ao Carrinho</button>                </div>
+              </div>`;
+              cardContainer.innerHTML += card;
+            });
+          })
+          .catch((error) => {
+            console.error("Erro ao filtrar produtos:", error);
+          });
+      }
+
+      function excecucaoFuncao() {
+        const minPriceElement = document.querySelector(
+          'input[name="preco"]:checked'
+        );
+        const marcaElements = document.querySelectorAll(
+          'input[name="marca"]:checked'
+        );
+        const genreElements = document.querySelectorAll(
+          'input[name="genero"]:checked'
+        );
+
+        let minPrice = null;
+        let maxPrice = null;
+        let marcasSelecionadas = [];
+        let genresSelecionados = [];
+
+        if (genreElements.length > 0) {
+          genresSelecionados = Array.from(genreElements).map((el) => el.value);
+        }
+
+        if (minPriceElement) {
+          const priceRange = minPriceElement.value.split("-");
+          minPrice = parseFloat(priceRange[0]);
+          maxPrice = priceRange[1] ? parseFloat(priceRange[1]) : null;
+        }
+
+        if (marcaElements.length > 0) {
+          marcaElements.forEach((el) => {
+            marcasSelecionadas.push(el.value);
+          });
+        }
+
+        const params = {
+          min: minPrice,
+          max: maxPrice,
+          marcas:
+            marcasSelecionadas.length > 0 ? marcasSelecionadas.join(",") : null,
+          genre: genresSelecionados.length > 0 ? genresSelecionados[0] : null,
+        };
+
+        axios
+          .get("http://localhost:8080/produtos/api/produtosPorPreco", {
+            params: params,
+          })
+          .then((response) => {
+            const produtosEncontrados = response.data;
+            const cardContainer = document.getElementById("row");
+            cardContainer.innerHTML = ""; // Limpa o contêiner antes de adicionar novos cards
+
+            if (
+              produtosEncontrados.length === 0 ||
+              produtosEncontrados === null
+            ) {
+              cardContainer.innerHTML = "Nenhum produto encontrado";
+              return; // Sai da função se não houver produtos encontrados
+            }
+
+            produtosEncontrados.forEach((produto) => {
+              productId = produto.id;
+              const card = `
+            <div class="card m-2" style="width: 18rem;">
+                               <a href="#" onclick="addToWishlist(${userId}, ${productId})" class="ms-auto">
+                  <i class="fa-solid fa-heart m-3 ms-auto" id="icon" style="font-size: 1.5rem;"></i>
+                  </a>
+              <a href="#" onclick="detalhesProduto('${produto.id}')">
+              <img src="${produto.imageUrl}" class="card-img-top" alt="">
+              <div class="card-body">
+                
+                <h5 class="card-title">${produto.name}</h5>
+                </a>
+                <p class="valorproduto">R$ ${produto.price}</p>
+                <p class="card-text">${produto.description}</p>
+<button class="btn btn-dark" id="addToCartBtn" onclick="addToCart(${userId}, ${productId})">Adicionar ao Carrinho</button>              </div>
+            </div>`;
+              cardContainer.innerHTML += card;
+            });
+          })
+          .catch((error) => {
+            console.error("Erro ao filtrar produtos:", error);
+          });
+      }
+
+      function filtrarMarca(marca) {
+        const marcaElements = document.querySelector('[name="marca"]');
+
+        let minPrice = null;
+        let maxPrice = null;
+        let marcasSelecionadas = null;
+
+        if (marcaElements) {
+          marcasSelecionadas = Array.from(marcaElements).map((el) => el.value);
+        }
+
+        const params = {
+          marca: marca, // Adicionando a marca específica selecionada
+        };
+
+        axios
+          .get("http://localhost:8080/produtos/api/produtosPorMarca", {
+            params,
+          })
+          .then((response) => {
+            const produtosEncontrados = response.data;
+            const cardContainer = document.getElementById("row");
+            cardContainer.innerHTML = ""; // Limpa o contêiner antes de adicionar novos cards
+
+            produtosEncontrados.forEach((produto) => {
+              productId = produto.id;
+              const card = `
+                <div class="card m-2" style="width: 18rem;">
+                                    <a href="#" onclick="addToWishlist(${userId}, ${productId})" class="ms-auto">
+                  <i class="fa-solid fa-heart m-3 ms-auto" id="icon" style="font-size: 1.5rem;"></i>
+                  </a>
+                  <a href="#" onclick="detalhesProduto('${produto.id}')">
+                  <img src="${produto.imageUrl}" class="card-img-top" alt="">
+                  <div class="card-body">
+                    
+                    <h5 class="card-title">${produto.name}</h5>
+                    </a>
+                    <p class="valorproduto">R$ ${produto.price}</p>
+                    <p class="card-text">${produto.description}</p>
+<button class="btn btn-dark" id="addToCartBtn" onclick="addToCart(${userId}, ${productId})">Adicionar ao Carrinho</button>                  </div>
+                </div>`;
+              cardContainer.innerHTML += card;
+            });
+          })
+          .catch((error) => {
+            console.error("Erro ao filtrar produtos:", error);
+            // Trate o erro de forma adequada para o usuário
+          });
+      }
+
+      // Função para filtrar por gênero e enviar requisição ao servidor
+      function filtrarGenero(genre) {
+        const genreElements = document.querySelector('[name="genero"]');
+        let genreSelecionados = null;
+
+        if (genreElements) {
+          genresSelecionados = Array.from(genreElements).map((el) => el.value);
+        }
+
+        const params = {
+          genre: genre, // Adicionando a marca específica selecionada
+        };
+
+        axios
+          .get("http://localhost:8080/produtos/api/produtosPorGenero", {
+            params,
+          })
+          .then((response) => {
+            const produtosEncontrados = response.data;
+            const cardContainer = document.getElementById("row");
+            cardContainer.innerHTML = ""; // Limpa o contêiner antes de adicionar novos cards
+
+            produtosEncontrados.forEach((produto) => {
+              productId = produto.id;
+              const card = `
+                <div class="card m-2" style="width: 18rem;">
+                                    <a href="#" onclick="addToWishlist(${userId}, ${productId})" class="ms-auto">
+                  <i class="fa-solid fa-heart m-3 ms-auto" id="icon" style="font-size: 1.5rem;"></i>
+                  </a>
+                  <a href="#" onclick="detalhesProduto('${produto.id}')">
+                  <img src="${produto.imageUrl}" class="card-img-top" alt="">
+                  <div class="card-body">
+                    
+                    <h5 class="card-title">${produto.name}</h5>
+                    </a>
+                    <p class="valorproduto">R$ ${produto.price}</p>
+                    <p class="card-text">${produto.description}</p>
+<button class="btn btn-dark" id="addToCartBtn" onclick="addToCart(${userId}, ${productId})">Adicionar ao Carrinho</button>                  </div>
+                </div>`;
+              cardContainer.innerHTML += card;
+            });
+          })
+          .catch((error) => {
+            console.error("Erro ao filtrar produtos:", error);
+            // Trate o erro de forma adequada para o usuário
+          });
+      }
+
+
+      function addToCart(userId, productId) {
+        axios.post(`http://localhost:8080/shopping-carts/${userId}/add/${productId}`)
+          .then(response => {
+            console.log('Produto adicionado ao carrinho:', response.data);
+            // Aqui você pode atualizar a interface, se necessário
+          })
+          .catch(error => {
+            console.error('Erro ao adicionar produto à lista de desejos:', error);
+          });
+      }
+  
+
+      function detalhesProduto(produtoId) {
+        window.location.href = `/detalhesProduto?id=${encodeURIComponent(
+          produtoId
+        )}`;
+      }
+    </script>
+  </body>
+</html>

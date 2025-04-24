@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Produtos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+    integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://kit.fontawesome.com/7805d04e4e.js" crossorigin="anonymous"></script>
+
+  <style>
+    .search-input {
+      width: 100vh;
+      /* Defina a largura desejada */
+    }
+
+    a {
+      text-decoration: none;
+      color: black;
+    }
+
+
+
+    .list-group {
+      background-color: #f9f9f9;
+      border-radius: 1rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      color: #000;
+    }
+
+    .list-group-item {
+      background-color: #f9f9f9;
+      border: none;
+      /* Remove a borda */
+
+    }
+
+    .botao-sem-estilo {
+      border: none;
+      background-color: transparent;
+
+    }
+
+    .botao-sem-estilo:hover {
+      text-decoration: underline;
+    }
+
+
+    .nav-item:hover {
+      background-color: gray;
+    }
+
+    .search-input {
+      border-radius: 40px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container justify-content-center">
+      <form class="d-flex" onsubmit="pesquisarPorNome(event);">
+        <input class="form-control me-2 search-input mt-2" id="inputNome" type="search" placeholder="Buscar"
+          aria-label="Search">
+        <button class="btn text-light" type="submit"><i class="fa-solid fa-magnifying-glass"
+            style="font-size: 1.3em;"></i></button>
+      </form>
+    </div>
+  </nav>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
+    <div class="container">
+      <button onclick="pesquisarPorNome()" class="navbar-toggler" type="button" data-bs-toggle="collapse"
+        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+        aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mx-auto me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" th:href="@{/index}">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" th:href="@{/listaDesejos}">Favoritos</a>
+          </li>
+          <li class="nav-item dropdown  ">
+            <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              Genero
+            </a>
+            <ul class="dropdown-menu text-light bg-dark" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item text-light" th:href="@{/index}" name="genero" value="F"
+                  onclick="filtrarGenero('F')">Feminino</a></li>
+              <li><a class="dropdown-item text-light" th:href="@{/index}" name="genero" value="F"
+                  onclick="filtrarGenero('M')">Masculino</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown  ">
+            <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              Marcas
+            </a>
+            <ul class="dropdown-menu text-light bg-dark" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item text-light" th:href="@{/index}" name="marca" value="Nike"
+                  onclick="filtrarMarca('Nike')">Nike</a></li>
+              <li><a class="dropdown-item text-light" th:href="@{/index}" name="marca" value="Adidas"
+                  onclick="filtrarMarca('Adidas')">Adidas</a></li>
+              <li><a class="dropdown-item text-light" th:href="@{/index}" hname="marca" value="Puma"
+                  onclick="filtrarMarca('Puma')">Puma</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" th:href="@{/carrinhoDeCompras} ">Carrinho</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" th:href="@{/login} ">Entrar</a>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+  </nav>
+
+
+
+
+  <div class="container d-flex justify-content-center mt-md-5">
+    <div class="card" style="width: 30em">
+      <form id="form-Login">
+        <div class="card-header bg-dark text-light">
+          Login
+        </div>
+        <div class="card-body">
+          <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="floatingInput" name="usuario" placeholder="Email" required>
+            <label for="floatingInput">Email</label>
+          </div>
+          <div class="form-floating">
+            <input type="password" class="form-control" id="floatingPassword" name="senha" placeholder="Senha" required>
+            <label for="floatingPassword">Senha</label>
+          </div>
+          <div class="footerLogin d-flex justify-content-center">
+            <button type="submit" class="btn btn-dark w-25 mt-3">Entrar</button>
+          </div>
+        </div>
+      </form>
+      <div class="footerLogin d-flex justify-content-center">
+        <span class="mb-3">Não possui uma conta?
+          <a th:href="@{/cadastro}" class="cadastro botao-sem-estilo mb-3">Crie uma Conta</a></span>
+
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    let UserId;
+
+
+    ///////////////// chamando id 
+    fetch('http://localhost:8080/users/profile')
+      .then(response => response.json()) // Converte a resposta para JSON
+      .then(data => {
+        userId = data;
+        if (userId) {
+          // Redireciona para a página de perfil
+          edicaoPerfil(userId)
+        }; // Substitua '/perfil' pela URL da sua página de perfil
+      }
+
+      )
+      .catch(error => {
+
+        // Continue com a lógica mesmo em caso de erro
+        // Aqui você pode redirecionar para a página de login, por exemplo:
+        // window.location.href = 'login.html';
+      })
+      .finally(() => {
+        // Continue com a lógica independente do sucesso ou falha da requisição
+        console.log('Continuação da lógica');
+        // Aqui você pode realizar outras inicializações da página, se necessário
+      });
+
+
+    function edicaoPerfil(userid) {
+      window.location.href = `/edicaoPerfil?id=${encodeURIComponent(userid)}`;
+    }
+
+
+
+    function verificarLogin() {
+      // Exemplo simples: verifique se há um token de autenticação armazenado no localStorage
+      const token = localStorage.getItem('token');
+
+    }
+
+    // Chama a função de verificação quando a página carrega
+
+
+
+
+
+    function pesquisarPorNome(event) {
+      event.preventDefault();
+      var nome = document.getElementById('inputNome').value;
+
+      axios.get('http://localhost:8080/index', {
+        params: {
+          Name: nome
+        }
+      })
+        .then(response => {
+          window.location.href = "/index?Name=" + encodeURIComponent(nome);
+        })
+        .catch(error => {
+          console.error('Erro na requisição:', error);
+        });
+    }
+
+
+    //login
+    const formLogin = document.getElementById("form-Login");
+
+    formLogin.addEventListener("submit", (evento) => {
+
+
+
+      evento.preventDefault();
+
+      const data = {
+        "username": document.getElementById("floatingInput").value,
+        "password": document.getElementById("floatingPassword").value
+      };
+
+
+      console.log("Dados do formulário:", data); // Imprime os dados no console
+
+      fetch("http://localhost:8080/users/login", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      }).then(response => {
+        if (response.status == 200) {
+          // Importe o Axios no seu script (se não estiver utilizando módulos)
+          window.location.href = '/login';
+          fetch('http://localhost:8080/users/profile')
+            .then(response => response.json()) // Converte a resposta para JSON
+            .then(data => {
+
+            })
+            .catch(error => {
+            });
+
+        } else if (response.status == 401) {
+        } else {
+          console.log(response);
+        }
+      }).catch(e => {
+      });
+    });
+
+
+
+
+
+  </script>
+</body>
+
+</html>

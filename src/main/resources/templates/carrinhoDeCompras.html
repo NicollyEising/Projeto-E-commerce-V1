@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+    integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://kit.fontawesome.com/7805d04e4e.js" crossorigin="anonymous"></script>
+  <style>
+    .search-input {
+      width: 100vh;
+      /* Defina a largura desejada */
+    }
+
+    img {
+      width: 20vh;
+      margin: auto;
+      margin-top: 2vh;
+    }
+
+    .row {
+      margin-top: 5vh;
+    }
+
+
+    .search-input {
+      width: 100vh;
+      /* Defina a largura desejada */
+    }
+
+    a {
+      text-decoration: none;
+      color: black;
+    }
+
+
+
+    button {
+      margin-top: 1vh;
+      ;
+    }
+
+
+    .nav-item:hover {
+      background-color: gray;
+    }
+
+    .search-input {
+      border-radius: 40px;
+    }
+
+    .information-grid {
+      
+    }
+
+    .valor{
+      display: flex;      
+      justify-content: space-between;
+    }
+    .list-group-item{
+      display: flex;
+    }
+    .produtos{
+      justify-content: space-between;
+      text-align: end;
+    }
+
+
+  </style>
+</head>
+
+<body>
+
+  
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container justify-content-center">
+      <form class="d-flex" onsubmit="pesquisarPorNome(event);">
+        <input class="form-control me-2 search-input mt-2" id="inputNome" type="search" placeholder="Buscar" aria-label="Search">
+        <button class="btn text-light" type="submit"><i class="fa-solid fa-magnifying-glass" style="font-size: 1.3em;"></i></button>
+      </form>
+    </div>
+  </nav>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
+    <div class="container">
+      <button onclick="pesquisarPorNome()" class="navbar-toggler" type="button" data-bs-toggle="collapse"
+        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+        aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mx-auto me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" th:href="@{/index}">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" th:href="@{/listaDesejos}">Favoritos</a>
+          </li>
+          <li class="nav-item dropdown  ">
+            <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              Genero
+            </a>
+            <ul class="dropdown-menu text-light bg-dark" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item text-light" th:href="@{/index}" name="genero" value="F"
+                  onclick="filtrarGenero('F')">Feminino</a></li>
+              <li><a class="dropdown-item text-light" th:href="@{/index}" name="genero" value="M"
+                  onclick="filtrarGenero('M')">Masculino</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown  ">
+            <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              Marcas
+            </a>
+            <ul class="dropdown-menu text-light bg-dark" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item text-light" th:href="@{/index}" name="marca" value="Nike"
+                  onclick="filtrarMarca('Nike')">Nike</a></li>
+              <li><a class="dropdown-item text-light" th:href="@{/index}" name="marca" value="Adidas"
+                  onclick="filtrarMarca('Adidas')">Adidas</a></li>
+              <li><a class="dropdown-item text-light" th:href="@{/index}" hname="marca" value="Puma"
+                  onclick="filtrarMarca('Puma')">Puma</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" th:href="@{/carrinhoDeCompras} ">Carrinho</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" th:href="@{/login} "
+              >Entrar</a>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+  </nav>
+
+
+
+
+    <div class="row justify-content-center">
+
+      <div class="col-md-8  produto-borda border" id="finalizarCompra">
+
+
+      <!--outro item-->
+      </div>
+      
+      <!--grid 2 direita-->
+      <div class="col-md-2 ml-md-4 information-grid">
+        <div class="p-2 border">
+          <ul class="list-group valor">
+            <li class="list-group-item border-0 border-bottom">Sumario</li>
+            <li class="list-group-item d-flex justify-content-between align-items-center border-0 border-bottom"><p>Produtos<br> Frete</p><p class="text-end" id="totalFrete">R$ 90 <br> Gratis</p></li>
+            <li class="list-group-item d-flex justify-content-between align-items-center border-0 border-bottom"><p class="fw-bold">Total</p><span class="text-end"><p class="fw-bold" id="total">R$ 90</p></span>
+            <li class="list-group-item d-flex justify-content-center align-content-center border-0"><button class="btn btn-dark" id="approvalButton">Finalizar Compra</button></li>
+          </ul>
+        </div>
+      </div>
+      </div>
+      </div>
+
+
+      
+     
+      
+      
+      
+      
+      
+          <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+          <script>
+              document.addEventListener('DOMContentLoaded', () => {
+          let userId;
+          let productId;
+          
+      
+      
+      
+          // Chamando o id
+          fetch('http://localhost:8080/users/profile')
+              .then(response => response.json()) // Converte a resposta para JSON
+              .then(data => {
+                  userId = data;
+      
+                  if (!userId) {
+                      console.error('Usuário não está logado');
+                      // Aqui você pode redirecionar para a página de login, por exemplo:
+                      // window.location.href = 'login.html';
+                  } else {
+                      console.log('Usuário logado. ID do usuário:', userId);
+                      fetchWishlist(userId); // Chama a função fetchWishlist com o userId
+                      getCartTotal(userId);
+      
+                      var botao = document.getElementById('approvalButton'); // Substitua 'idDoSeuBotao' pelo ID real do seu botão
+      
+                      // Adicionando o evento onclick com o userId
+                      botao.onclick = function() {
+                          url();
+                          criarOrdemUsuario(userId);
+                      };
+      
+      
+                      const finalizarcompra = document.getElementById('finalizarCompra');
+                      finalizarcompra.innerHTML = '';
+                  
+                      const finalizarCard = document.createElement('div');
+                      //nao sei oq colocar aqui ainda
+                      finalizarCard.className = '';
+      
+                      finalizarCard.innerHTML = `
+      
+                      <h4>Total do Carrinho: <span id="total"></span></h4>
+      
+      
+                      <button onclick="criarOrdemUsuario(${userId})">Criar ordem</button>
+      
+                      `;
+          
+                      finalizarcompra.appendChild(finalizarCard);
+      
+                  }
+              })
+              .catch(error => {
+              });
+      
+          function fetchWishlist(userId) {
+              axios.get(`http://localhost:8080/shopping-carts/carrinhoPorUsuario/${userId}`)
+                  .then(response => {
+                      const cart = response.data;
+                      displayWishlist(cart);
+                  })
+                  .catch(error => {
+                      console.error('Erro ao buscar a lista de desejos:', error);
+                  });
+          }
+      
+          function displayWishlist(cart) {
+            const cartContainer = document.getElementById('finalizarCompra');
+            cartContainer.innerHTML = '';
+          
+            if (cart.length === 0) {
+                cartContainer.innerHTML = '<p>Seu carrinho está vazio.</p>';
+            } else {
+                cart.forEach(product => {
+                  productId = product.id; // Correção aqui
+                    const productCard = document.createElement('div');
+                  
+          
+                    productCard.innerHTML = `
+          
+               
+          
+                
+                <!--grid 1 esquerda-->
+                <div class="row justify-content-center border-bottom m-md-3 ">
+                  <div class="col-md-2">
+                <img src="${product.imageUrl}"
+                      class="img-fluid rounded-start" alt="...">
+                  </div>
+                  <div class="col-md-5">
+                    <div class="card-body">
+                      <h5 class="card-title name mt-md-3">${product.name}</h5>
+                      <h6 class="card-title id " style="font-size: 0.8em">COD: ${product.id}</h6>
+                      <p class="card-text description mb-3">${product.description}</p>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <h6 class="stock mt-md-4">Estoque</h6>
+                    <p class="stock ">${product.stock}</p>
+                  </div>
+                  <div class="col-md-2 "  >
+                    <h4 class="mt-md-4 id="total"">R$ ${product.price}</h4>
+                  </div>
+                  <div class="col-md-1"> 
+                    <a onclick="removeFromCart(${userId}, ${productId})" style="font-size: 1.5em; cursor: pointer;"><i class="fa-solid fa-xmark"></i></a>
+                   
+                  </div>
+                  </div>
+          
+                    `;
+          
+                    cartContainer.appendChild(productCard);
+                  });
+                }
+              }
+          
+            }
+            );
+          
+          
+      function minhaFunction(){
+      
+          let userId;
+          let productId;
+      
+          // Chamando o id
+          fetch('http://localhost:8080/users/profile')
+              .then(response => response.json()) // Converte a resposta para JSON
+              .then(data => {
+                  userId = data;
+      
+                  var botao = document.getElementById('approvalButton'); // Substitua 'idDoSeuBotao' pelo ID real do seu botão
+      
+                  // Adicionando o evento onclick com o userId
+                  botao.onclick = function(userId) {
+                      criarOrdemUsuario(userId);
+                  };
+      
+      
+                  if (!userId) {
+                      console.error('Usuário não está logado');
+                      // Aqui você pode redirecionar para a página de login, por exemplo:
+                      // window.location.href = 'login.html';
+                  } else {
+                      console.log('Usuário logado. ID do usuário:', userId);
+                      fetchWishlist(userId); // Chama a função fetchWishlist com o userId
+                      getCartTotal(userId);
+                  }
+              })
+              .catch(error => {
+              });
+      
+          function fetchWishlist(userId) {
+              axios.get(`http://localhost:8080/shopping-carts/carrinhoPorUsuario/${userId}`)
+                  .then(response => {
+                      const cart = response.data;
+                      displayWishlist(cart);
+                  })
+                  .catch(error => {
+                      console.error('Erro ao buscar a lista de desejos:', error);
+                  });
+          }
+      
+          function displayWishlist(cart) {
+            const cartContainer = document.getElementById('finalizarCompra');
+            cartContainer.innerHTML = '';
+          
+            if (cart.length === 0) {
+                cartContainer.innerHTML = '<p>Seu carrinho está vazio.</p>';
+            } else {
+                cart.forEach(product => {
+                  productId = product.id; // Correção aqui
+                    const productCard = document.createElement('div');
+                  
+          
+                    productCard.innerHTML = `
+          
+               
+          
+                
+                <!--grid 1 esquerda-->
+                <div class="row justify-content-center border-bottom m-md-3 ">
+                  <div class="col-md-2">
+                <img src="${product.imageUrl}"
+                      class="img-fluid rounded-start" alt="...">
+                  </div>
+                  <div class="col-md-5">
+                    <div class="card-body">
+                      <h5 class="card-title name mt-md-3">${product.name}</h5>
+                      <h6 class="card-title id " style="font-size: 0.8em">COD: ${product.id}</h6>
+                      <p class="card-text description mb-3">${product.description}</p>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <h6 class="stock mt-md-4">Estoque</h6>
+                    <p class="stock ">${product.stock}</p>
+                  </div>
+                  <div class="col-md-2 "  >
+                    <h4 class="mt-md-4 id="total"">R$ ${product.price}</h4>
+                  </div>
+                  <div class="col-md-1"> 
+                    <a onclick="removeFromCart(${userId}, ${productId})" style="font-size: 1.5em; cursor: pointer;"><i class="fa-solid fa-xmark"></i></a>
+                   
+                  </div>
+                  </div>
+          
+                    `;
+          
+                    cartContainer.appendChild(productCard);
+                  });
+                }
+              }
+          
+            }
+           
+          
+            function getCartTotal(userId) {
+              axios.get(`http://localhost:8080/shopping-carts/${userId}/total`)
+                .then(response => {
+                  const total = response.data;
+                  document.getElementById('total').textContent = `R$ ${total.toFixed(2)}`; // Atualiza o elemento HTML com o total formatado
+                  document.getElementById('totalFrete').innerHTML = `R$ ${total.toFixed(2)}<br>Gratis`;
+                })
+                .catch(error => {
+                  console.error('Erro ao obter total do carrinho:', error);
+                });
+          
+            }
+          
+      
+       function url() {
+            axios.get('http://localhost:8080/payment/getLinks')
+              .then(response => {
+                const approvalUrl = response.data;
+                console.log(approvalUrl);
+                window.location.href = approvalUrl;
+              })
+              .catch(error => {
+                console.error('Erro ao obter a URL de aprovação:', error.response ? error.response.data : error.message);
+              });
+          }
+      
+      
+      
+      function criarOrdemUsuario(userId) {
+        let id = userId;
+        const url = `http://localhost:8080/paypal/${id}/criarOrdem`; // Substitua pela URL correta da sua API
+      
+        axios.post(url, { id: id })
+          .then(response => {
+            console.log('Ordem criada com sucesso:', response.data);
+            // Verificar a resposta da criação de ordem
+
+            url();
+      
+          })
+          .catch(error => {
+            console.error('Erro ao criar a ordem:', error.response ? error.response.data : error.message);
+            // Trate o erro, como exibir uma mensagem para o usuário
+          });
+      }
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      function removeFromCart(userId, productId) {
+          axios.delete(`/shopping-carts/${userId}/removerCarrinhoPorUsuario/${productId}`)
+              .then(response => {
+                  console.log('Produto removido do carrinho:', response.data);
+                  minhaFunction(); // Atualiza a lista de desejos após remover o produto
+              })
+              .catch(error => {
+                  console.error('Erro ao remover produto do carrinho:', error);
+              });
+      }
+
+      function pesquisarPorNome(event) {
+        event.preventDefault();
+        var nome = document.getElementById('inputNome').value;
+  
+        axios.get('http://localhost:8080/index', {
+          params: {
+            Name: nome
+          }
+        })
+          .then(response => {
+            window.location.href = "/index?Name=" + encodeURIComponent(nome);
+          })
+          .catch(error => {
+            console.error('Erro na requisição:', error);
+          });
+      }
+  
+      
+
+      
+  function getCartTotal(userId) {
+    axios.get(`http://localhost:8080/shopping-carts/${userId}/total`)
+      .then(response => {
+        const total = response.data;
+        document.getElementById('total').textContent = `R$ ${total.toFixed(2)}`; // Atualiza o elemento HTML com o total formatado
+        document.getElementById('totalFrete').innerHTML = `R$ ${total.toFixed(2)}<br>Gratis`;
+      })
+      .catch(error => {
+        console.error('Erro ao obter total do carrinho:', error);
+      });
+
+  }
+
+
+      
+          </script>
+</body>
+
+</html>
+
