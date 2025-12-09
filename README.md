@@ -23,7 +23,7 @@ Este é um projeto de e-commerce de sapatos que permite aos usuários realizar l
 
 ## Como Rodar o Projeto
 
-1. Instalar dependências  
+1. Instalar Dependencias   
    `mvn clean install`  
 
 3. Iniciar a aplicação  
